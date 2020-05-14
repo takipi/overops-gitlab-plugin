@@ -1,1 +1,1 @@
-# concourse-gitlab-plugin
+# Concourse Overops Resource

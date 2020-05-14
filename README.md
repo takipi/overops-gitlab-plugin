@@ -1,1 +1,1 @@
-# Concourse Overops Resource
+# GitLab Overops Plugin

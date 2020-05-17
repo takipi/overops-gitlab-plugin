@@ -1,0 +1,9 @@
+FROM openjdk:8
+ARG JAR_FILE
+ARG SCRIPT_FILE
+
+COPY ${JAR_FILE} /opt
+COPY ${SCRIPT_FILE} /opt
+
+WORKDIR /opt
+ENTRYPOINT /bin/bash

@@ -1,18 +1,11 @@
 package com.overops.plugins;
 
-import com.overops.report.service.QualityReportParams;
-import com.overops.report.service.ReportGeneratorException;
 import com.overops.report.service.ReportService;
-import com.overops.report.service.model.QualityReport;
-import com.overops.report.service.model.QualityReportExceptionDetails;
-import com.overops.report.service.model.ReportStatus;
-import com.overops.report.service.model.Requestor;
-import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * Main Entry Point for the Overops GitLab Plugin
+ * Main Entry Point for the OverOps GitLab Plugin
  */
 public class GitLabMain {
 
@@ -28,14 +21,13 @@ public class GitLabMain {
             LOG.debug("  - {}", arg);
         }
 
-        // Parse Args
-        Config config = new Config(args);
+        ReportService reportService = new ReportService();
 
         // Create & Run Plugin
-        GitLabPlugin plugin = new GitLabPlugin(config);
-        int status = plugin.run();
+        GitLabPlugin plugin = new GitLabPlugin(reportService);
+        JobStatus status = plugin.run(args);
 
-        System.exit(status);
+        System.exit(status.statusCode());
     }
 
 }

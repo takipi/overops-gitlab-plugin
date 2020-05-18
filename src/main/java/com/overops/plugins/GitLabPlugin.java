@@ -1,18 +1,18 @@
 /**
  * MIT License
- * 
+ * <p>
  * Copyright (c) 2020 OverOps, Inc.
- * 
+ * <p>
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
  * in the Software without restriction, including without limitation the rights
  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
  * copies of the Software, and to permit persons to whom the Software is
  * furnished to do so, subject to the following conditions:
- * 
+ * <p>
  * The above copyright notice and this permission notice shall be included in all
  * copies or substantial portions of the Software.
- * 
+ * <p>
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
  * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -21,15 +21,15 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
- package com.overops.plugins;
+package com.overops.plugins;
 
 import com.overops.report.service.QualityReportParams;
 import com.overops.report.service.ReportGeneratorException;
 import com.overops.report.service.ReportService;
 import com.overops.report.service.model.QualityReport;
 import com.overops.report.service.model.QualityReportExceptionDetails;
-import com.overops.report.service.model.ReportStatus;
-import com.overops.report.service.model.Requestor;
+import com.overops.report.service.model.QualityReport.ReportStatus;
+import com.overops.report.service.ReportService.Requestor;
 import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -46,10 +46,10 @@ public class GitLabPlugin {
 
     private static final Logger LOG = LoggerFactory.getLogger(GitLabPlugin.class);
 
-    private final Config config;
+    private final ReportService reportService;
 
-    public GitLabPlugin(Config config) {
-        this.config = config;
+    public GitLabPlugin(ReportService reportService) {
+        this.reportService = reportService;
     }
 
     /**
@@ -57,42 +57,60 @@ public class GitLabPlugin {
      *
      * @return status code
      */
-    public int run() {
+    public JobStatus run(String[] args) {
 
-        int status = 1;
-        QualityReport report;
+        Config config = null;
+
         try {
+            config = new Config(args);
             String url = config.getOverOpsURL();
             String apiKey = config.getOverOpsAPIKey();
             QualityReportParams params = config.getReportParams();
+
             Requestor requestor = Requestor.GIT_LAB;
-            report = new ReportService().runQualityReport(url, apiKey, params, requestor);
-            status = report.getStatusCode() == ReportStatus.FAILED ? 1 : 0;
+            QualityReport report = reportService.runQualityReport(url, apiKey, params, requestor);
+
+            writeHtmlReport(report.toHtml());
+
+            // Determine if we should fail the build
+            if (report.getStatusCode() == ReportStatus.FAILED) {
+                if ((report.getExceptionDetails() != null) && params.isErrorSuccess()) {
+                    // Exceptions found; but we have declared to claim success on errors
+                    return JobStatus.PASS;
+                } else {
+                    // Exceptions found and we have declared to make the job a failure
+                    return JobStatus.FAIL;
+                }
+            } else {
+                // Job Successful
+                return JobStatus.PASS;
+            }
+
         } catch (Exception e) {
-            // TODO (ccaspanello) Revisit and make sure we have all the scenarios covered.
-            QualityReportExceptionDetails details = new QualityReportExceptionDetails();
-            details.setExceptionMessage(e.getMessage());
-
-            report = new QualityReport();
-            report.setExceptionDetails(details);
-            status = config.getReportParams().isMarkUnstable() ? 1 : 0;
+            writeHtmlReport(reportService.exceptionHtml(e));
+            return safeFailure(config);
         }
+    }
 
-        writeQualityReport(report);
-        return status;
+    private JobStatus safeFailure(Config config) {
+        try {
+            return config.getReportParams().isErrorSuccess() ? JobStatus.PASS : JobStatus.FAIL;
+        } catch (NullPointerException npe) {
+            return JobStatus.FAIL;
+        }
     }
 
     /**
      * Writes the quality report to the proper location.
      *
-     * @param report
+     * @param html
      */
-    private void writeQualityReport(QualityReport report) {
+    private void writeHtmlReport(String html) {
         try {
-            File writeDirectory = writeDirectory();
+            File writeDirectory = determineWriteDirectory();
             File file = new File(writeDirectory, "quality-report.html");
             LOG.info("Report written to: {}", file.getAbsolutePath());
-            IOUtils.write(report.toHtml(), new FileOutputStream(file), Charset.defaultCharset());
+            IOUtils.write(html, new FileOutputStream(file), Charset.defaultCharset());
         } catch (IOException e) {
             throw new ReportGeneratorException("Unable to generate report.", e);
         }
@@ -105,7 +123,7 @@ public class GitLabPlugin {
      *
      * @return folder where we should write the quality report HTML file.
      */
-    private File writeDirectory() {
+    private File determineWriteDirectory() {
         String ciProjectDir = System.getenv("CI_PROJECT_DIR");
         if (ciProjectDir != null) {
             return new File(ciProjectDir);

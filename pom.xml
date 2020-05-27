@@ -22,7 +22,7 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <fileName>gitlab-overops</fileName>
         <version.takipi>2.32.0</version.takipi>
-        <docker.image.prefix>ccaspanello</docker.image.prefix>
+        <docker.image.prefix>overops</docker.image.prefix>
     </properties>
 
     <dependencies>
@@ -97,7 +97,7 @@
                 <configuration>
                     <useMavenSettingsForAuth>true</useMavenSettingsForAuth>
                     <repository>docker.io/${docker.image.prefix}/${project.artifactId}</repository>
-                    <tag>latest</tag>
+                    <tag>dev</tag>
                     <buildArgs>
                         <JAR_FILE>target/${fileName}.jar</JAR_FILE>
                         <SCRIPT_FILE>src/docker/run-quality-report.sh</SCRIPT_FILE>

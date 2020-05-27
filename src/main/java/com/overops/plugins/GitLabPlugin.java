@@ -37,6 +37,7 @@ import org.slf4j.LoggerFactory;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.PrintStream;
 import java.nio.charset.Charset;
 
 /**
@@ -68,7 +69,7 @@ public class GitLabPlugin {
             QualityReportParams params = config.getReportParams();
 
             Requestor requestor = Requestor.GIT_LAB;
-            QualityReport report = reportService.runQualityReport(url, apiKey, params, requestor);
+            QualityReport report = reportService.runQualityReport(url, apiKey, params, requestor, System.out, params.isDebug());
 
             writeHtmlReport(report.toHtml());
 

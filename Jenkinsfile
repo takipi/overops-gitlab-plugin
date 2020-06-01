@@ -1,7 +1,7 @@
  properties([
     parameters([
         choice(name: 'CLEAN', choices: ['false', 'true'], description: 'Clean workspace before build'),
-        string(name: 'BRANCH', defaultValue: '*/feature/OOE-54', description: 'Default branch'),
+        string(name: 'BRANCH', defaultValue: '*/develop', description: 'Default branch'),
         string(name: 'RELEASE_VERSION', defaultValue: '', description: 'Release version')
     ])
 ])

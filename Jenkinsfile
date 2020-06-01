@@ -1,7 +1,7 @@
  properties([
     parameters([
         choice(name: 'CLEAN', choices: ['false', 'true'], description: 'Clean workspace before build'),
-        string(name: 'BRANCH', defaultValue: '*/develop', description: 'Default branch'),
+        string(name: 'BRANCH', defaultValue: 'develop', description: 'Default branch'),
         string(name: 'RELEASE_VERSION', defaultValue: '', description: 'Release version')
     ])
 ])
@@ -25,7 +25,7 @@ pipeline {
         }
         stage('Clone') {
             steps {
-                git branch: 'feature/OOE-54', url: 'https://github.com/takipi/overops-gitlab-plugin.git'
+                git branch: params.BRANCH, url: 'https://github.com/takipi/overops-gitlab-plugin.git'
             }
         }
         stage('Build') {

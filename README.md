@@ -1,3 +1,4 @@
+[![Build Status](https://jenkins-k8s.overops-samples.com/buildStatus/icon?job=overops-gitlab-plugin)](https://jenkins-k8s.overops-samples.com/job/overops-gitlab-plugin/)
 # GitLab Overops Plugin
 ## Quick Set Up
 Assuming there is already an instance of GitLab up, the next step is to attach the OverOps GitLab Plugin to your existing pipeline.

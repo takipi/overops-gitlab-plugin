@@ -31,9 +31,11 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 public class Config {
+    private String overOpsAppURL;
     private String overOpsURL;
     private String overOpsAPIKey;
     private QualityReportParams reportParams;
+    private boolean overOpsLink;
 
     public Config(String[] args) {
         Map<String, String> argsMap = argsToMap(args);
@@ -61,8 +63,10 @@ public class Config {
         params.setDebug(Boolean.parseBoolean(argsMap.getOrDefault("debug", "false")));
 
         reportParams = params;
+        overOpsAppURL = argsMap.get("overOpsAppURL");
         overOpsURL = argsMap.get("overOpsURL");
         overOpsAPIKey = argsMap.get("overOpsAPIKey");
+        overOpsLink = Boolean.parseBoolean(argsMap.getOrDefault("link", "false"));
     }
 
     private Map<String, String> argsToMap(String[] args) {
@@ -75,6 +79,10 @@ public class Config {
                 }).collect(Collectors.toMap(Pair::getFirst, Pair::getSecond));
     }
 
+    public String getOverOpsAppURL() {
+        return overOpsAppURL;
+    }
+
     public String getOverOpsURL() {
         return overOpsURL;
     }
@@ -85,5 +93,9 @@ public class Config {
 
     public QualityReportParams getReportParams() {
         return reportParams;
+    }
+
+    public boolean isOverOpsLink(){
+        return overOpsLink;
     }
 }

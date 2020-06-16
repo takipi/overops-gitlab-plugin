@@ -76,6 +76,8 @@ overops:
 ## Configuration parameters
 Parameter | Required | Default Value | Description
 ---------|----------|---------|---------
+
+OVEROPS_APP_URL | true | --- | The OverOps Backend URL(Saas: https://app.overops.com)
 OVEROPS_URL | true | --- | The OverOps API Endpoint(Saas: https://api.overops.com)
 OVEROPS_SID | true | --- | The OverOps environment identifier (e.g S4567) to inspect data for this build
 OVEROPS_API_KEY | true | --- | API Key for interaction with OverOps API
@@ -92,3 +94,4 @@ OVEROPS_CRITICAL_EXCEPTION_TYPES | false | | A comma delimited list of exception
 OVEROPS_SHOW_EVENTS_FOR_PASSED_GATES | false | false | Display events for the quality gates even if the the gates passed.
 pass_build_on_exception | false | false | Determines if the build should pass if there are exception/exceptions.
 OVEROPS_DEBUG | false | false | For advanced debugging purposes only
+OVEROPS_LINK | false | false | Set true if you want to simply generate a link to the report to view later

@@ -11,7 +11,7 @@ See GitLab Runner Quickstart Wiki Documentation
 Example file name: `.gitlab-ci.yml`
 
 ```yaml
-image: ccaspanello/overops-gitlab-plugin:latest
+image: overops/overops-gitlab-plugin:2.24.0
 
 variables:
   TAKIPI_BASE_URL: https://backend.overops.com

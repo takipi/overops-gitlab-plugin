@@ -77,7 +77,6 @@ overops:
 ## Configuration parameters
 Parameter | Required | Default Value | Description
 ---------|----------|---------|---------
-
 OVEROPS_APP_URL | true | --- | The OverOps Backend URL(Saas: https://app.overops.com)
 OVEROPS_URL | true | --- | The OverOps API Endpoint(Saas: https://api.overops.com)
 OVEROPS_SID | true | --- | The OverOps environment identifier (e.g S4567) to inspect data for this build

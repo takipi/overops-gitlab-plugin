@@ -1,4 +1,5 @@
 java -jar /opt/gitlab-overops.jar \
+    ${OVEROPS_APP_URL:+--overOpsAppURL=$OVEROPS_APP_URL} \
     ${OVEROPS_URL:+--overOpsURL=$OVEROPS_URL} \
     ${OVEROPS_SID:+--overOpsSID=$OVEROPS_SID} \
     ${OVEROPS_API_KEY:+--overOpsAPIKey=$OVEROPS_API_KEY} \
@@ -20,4 +21,5 @@ java -jar /opt/gitlab-overops.jar \
     ${OVEROPS_APPLY_SEASONALITY:+--applySeasonality=$OVEROPS_APPLY_SEASONALITY} \
     ${OVEROPS_SHOW_EVENTS_FOR_PASSED_GATES:+--showEventsForPassedGates=$OVEROPS_SHOW_EVENTS_FOR_PASSED_GATES} \
     ${OVEROPS_DEBUG:+--debug=$OVEROPS_DEBUG} \
-    ${OVEROPS_CHECK:+--checkVersion=$OVEROPS_CHECK}
+    ${OVEROPS_CHECK:+--checkVersion=$OVEROPS_CHECK} \
+    ${OVEROPS_LINK:+--link=$OVEROPS_LINK}

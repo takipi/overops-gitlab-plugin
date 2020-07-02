@@ -21,7 +21,7 @@
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <fileName>gitlab-overops</fileName>
-        <version.takipi>2.33.2</version.takipi>
+        <version.takipi>2.34.0</version.takipi>
         <docker.image.prefix>overops</docker.image.prefix>
     </properties>
 

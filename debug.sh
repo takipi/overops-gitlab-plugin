@@ -1,13 +1,16 @@
-mvn clean package
+#mvn clean package
 
-OVEROPS_URL=http://localhost:8080
-OVEROPS_API_KEY=Kjibm5PK1D4hLfseWkpvZ/Y7BmqpZwJFwnbT5gso
-OVEROPS_SID=S1
+OVEROPS_APP_URL=https://app.overops.com
+OVEROPS_URL=https://api.overops.com:8080
+OVEROPS_API_KEY=MgtbLpOMzJy6tG91n2NKkvHFPQD3i8hqlnMmb+Nm
+OVEROPS_SID=S40514
 OVEROPS_APPLICATION_NAME=event-generator
 OVEROPS_DEPLOYMENT_NAME=deployment1
 OVEROPS_NEW_EVENTS=true
+OVEROPS_LINK=true
 
 java -jar target/gitlab-overops.jar \
+    ${OVEROPS_APP_URL:+--overOpsAppURL=$OVEROPS_APP_URL} \
     ${OVEROPS_URL:+--overOpsURL=$OVEROPS_URL} \
     ${OVEROPS_SID:+--overOpsSID=$OVEROPS_SID} \
     ${OVEROPS_API_KEY:+--overOpsAPIKey=$OVEROPS_API_KEY} \
@@ -29,5 +32,6 @@ java -jar target/gitlab-overops.jar \
     ${OVEROPS_APPLY_SEASONALITY:+--applySeasonality=$OVEROPS_APPLY_SEASONALITY} \
     ${OVEROPS_SHOW_EVENTS_FOR_PASSED_GATES:+--showEventsForPassedGates=$OVEROPS_SHOW_EVENTS_FOR_PASSED_GATES} \
     ${OVEROPS_DEBUG:+--debug=$OVEROPS_DEBUG} \
-    ${OVEROPS_CHECK:+--checkVersion=$OVEROPS_CHECK}
+    ${OVEROPS_CHECK:+--checkVersion=$OVEROPS_CHECK} \
+    ${OVEROPS_LINK:+--link=$OVEROPS_LINK}
 open /tmp/quality-report.html

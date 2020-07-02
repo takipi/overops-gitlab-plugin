@@ -64,29 +64,35 @@ public class GitLabPlugin {
 
         try {
             config = new Config(args);
+            String appUrl = config.getOverOpsAppURL();
             String url = config.getOverOpsURL();
             String apiKey = config.getOverOpsAPIKey();
             QualityReportParams params = config.getReportParams();
 
-            Requestor requestor = Requestor.GIT_LAB;
-            QualityReport report = reportService.runQualityReport(url, apiKey, params, requestor, System.out, params.isDebug());
-
-            writeHtmlReport(report.toHtml());
-
-            // Determine if we should fail the build
-            if (report.getStatusCode() == ReportStatus.FAILED) {
-                if ((report.getExceptionDetails() != null) && params.isErrorSuccess()) {
-                    // Exceptions found; but we have declared to claim success on errors
-                    return JobStatus.PASS;
-                } else {
-                    // Exceptions found and we have declared to make the job a failure
-                    return JobStatus.FAIL;
-                }
-            } else {
-                // Job Successful
+            if(config.isOverOpsLink()){
+                String linkReport = reportService.generateReportLinkHtml(appUrl, params);
+                writeHtmlReport(linkReport);
                 return JobStatus.PASS;
-            }
+            }else{
+                ReportService.pauseForTheCause();
+                Requestor requestor = Requestor.GIT_LAB;
+                QualityReport report = reportService.runQualityReport(url, apiKey, params, requestor, System.out, params.isDebug());
 
+                writeHtmlReport(report.toHtml());
+                // Determine if we should fail the build
+                if (report.getStatusCode() == ReportStatus.FAILED) {
+                    if ((report.getExceptionDetails() != null) && params.isErrorSuccess()) {
+                        // Exceptions found; but we have declared to claim success on errors
+                        return JobStatus.PASS;
+                    } else {
+                        // Exceptions found and we have declared to make the job a failure
+                        return JobStatus.FAIL;
+                    }
+                } else {
+                    // Job Successful
+                    return JobStatus.PASS;
+                }
+            }
         } catch (Exception e) {
             writeHtmlReport(reportService.exceptionHtml(e));
             return safeFailure(config);

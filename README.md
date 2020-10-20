@@ -6,6 +6,11 @@ Assuming there is already an instance of GitLab up, the next step is to attach t
 ## Configure Runner
 See GitLab Runner Quickstart Wiki Documentation
 
+## Configuration Options
+You may not want to check in variables such as TAKIPI_SECRET_KEY or OVEROPS_API_KEY into GitLab.  Instead of adding those to the `.gitlab-ci.yml` file those can be configured in Settings -> CI/CD -> Variables.  Any of the variables in the example can be configured this way.  If a variable is also configured in the `.gitlab-ci.yml` the variable configured in Settings -> CI/CD -> Variables will be overridden.
+
+Note:  If a pull request is issued, variables will be used from the users environment kicking off the pipeline.  So any variables configured at the orginizational level need to be reconfigured (which could be desireable to keep individual contributions separate from organizational statistics).
+
 ## Configuration example
 
 Example file name: `.gitlab-ci.yml`

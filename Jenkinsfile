@@ -10,7 +10,7 @@ pipeline {
     agent {
         docker { 
 	  image 'maven:3.6.3-openjdk-8'
-          args '--network=host -v /var/run/docker.sock:/var/run/docker.sock'
+          args '-v /var/run/docker.sock:/var/run/docker.sock'
 	}
     }
 
